@@ -1,2 +1,4 @@
 *.yml
 *.zip
+*.xml
+!pom.xml

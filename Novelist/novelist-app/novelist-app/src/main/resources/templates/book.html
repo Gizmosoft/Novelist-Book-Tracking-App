@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details | Novelist</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container" style="padding-left: 10%; padding-right: 10%;">
+      <div th:insert="components/book-search :: search-panel"></div>
+    <div class="card" style="max-width: 800px; margin-left: 10%;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img th:src="${coverImage}" class="img-fluid rounded-start" alt="Book Image">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title display-4" th:text="${book.name}">Book Name</h5>
+              <p class="card-text display-6" th:text="${book.authorNames}">Author Name</p>
+              <p class="card-text" th:text="${book.description}">Book Description</p>
+              <p class="card-text">Published Date: <small class="text-muted" th:text="${book.publishedDate}">2021-01-01</small></p>
+
+              <div th:unless="${loginId}" class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <p class="card-text display-7 px-2">Login to Track this book</p>
+                <a type="button" href="/oauth2/authorization/github" class="btn btn-primary btn-mg px-2 gap-3">Login via GitHub</a>
+              </div>
+
+              <form th:if="${loginId}" th:attr="action=@{/addUserBook}" method="POST">
+                <input type="hidden"
+                  th:name="${_csrf.parameterName}"
+                  th:value="${_csrf.token}"/>
+                <input type="hidden"
+                  th:value="${book.id}" name="bookId" />
+
+                <div class="mb-3">
+                  <label for="startDate" class="form-label">Start Date</label>
+                  <input type="date" class="form-control" id="startDate" name="startDate" th:value="${userBooks.startedDate}">
+                </div>
+                <div class="mb-3">
+                  <label for="completedDate" class="form-label">Completed Date</label>
+                  <input type="date" class="form-control" id="completedDate" name="completedDate" th:value="${userBooks.completedDate}">
+                </div>
+                <div class="mb-3">
+                  <label for="status" class="form-label">Status</label>
+                  <select id="readingStatus" name="readingStatus" class="form-select" aria-label="Reading Status" th:field="${userBooks.readingStatus}">
+                    <option selected value="3">Select Status</option>
+                    <option value="0-reading">Currently Reading</option>
+                    <option value="1-finished">Finished</option>
+                    <option value="2-dnf">Did Not Finish</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="rating" class="form-label">Ratings</label>
+                  <select id="rating" name="rating" class="form-select" aria-label="Ratings" th:field="${userBooks.rating}">
+                    <option selected value="0">Select Rating</option>
+                    <option value="1">&#9733;</option>
+                    <option value="2">&#9733;&#9733;</option>
+                    <option value="3">&#9733;&#9733;&#9733;</option>
+                    <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+                    <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary" type="submit">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+    <!-- <p th:text="${book.name}">Book Name</p>
+    <p th:text="${book.description}">Book Description</p> -->
+</body>
+</html>
